@@ -3,9 +3,7 @@ import Swal from 'sweetalert2';
 import './style.css';
 
 const button = document.querySelector('#submit');
-const moedaValor = [];
 let listMoedas;
-let reload = 1;
 
 const urlForm = (moeda) => `https://api.exchangerate.host/latest?base=${moeda}`;
 function verificador(element) {
@@ -28,42 +26,22 @@ function verificador(element) {
 
   return true;
 }
-function criadorCubinhos(arrayMoedas) {
-  arrayMoedas.forEach((moedaObj) => {
-    const main1 = document.querySelector('main');
-    const section = document.createElement('section');
-    const p1 = document.createElement('p');
-    const p2 = document.createElement('p');
-    const number = Number(moedaObj.Valor).toFixed(3);
+function criadorCubinhos(moedaObj) {
+  const main = document.querySelector('main');
+  const section = document.createElement('section');
+  const p1 = document.createElement('p');
+  const p2 = document.createElement('p');
+  const number = Number(moedaObj.Valor).toFixed(3);
 
-    p1.innerHTML = moedaObj.Moeda;
-    p2.innerHTML = number;
-    p2.classList.add('valor');
+  p1.innerHTML = moedaObj.Moeda;
+  p2.innerHTML = number;
+  p2.classList.add('valor');
 
-    section.appendChild(p1);
-    section.appendChild(p2);
-    section.classList.add('caixa');
+  section.appendChild(p1);
+  section.appendChild(p2);
+  section.classList.add('caixa');
 
-    main1.appendChild(section);
-  });
-}
-function deletarMoedas() {
-  if (reload > 1) {
-    const main = document.querySelector('main');
-    main.remove();
-
-    const newMain = document.createElement('main');
-    const body = document.querySelector('body');
-
-    body.appendChild(newMain);
-    reload -= 1;
-
-    while (moedaValor.length > 0) {
-      moedaValor.pop();
-    }
-  } else {
-    reload += 1;
-  }
+  main.appendChild(section);
 }
 
 fetch(urlForm('brl'))
@@ -72,6 +50,7 @@ fetch(urlForm('brl'))
 
 button.addEventListener('click', (event) => {
   event.preventDefault();
+  document.querySelector('main').innerHTML = '';
 
   const moedaInput = document.querySelector('#moeda').value;
 
@@ -81,11 +60,8 @@ button.addEventListener('click', (event) => {
       .then((data) => {
         Object.keys(data.rates).forEach((elemnt, index) => {
           const values = Object.values(data.rates);
-          moedaValor.push({ Moeda: elemnt, Valor: values[index] });
+          criadorCubinhos({ Moeda: elemnt, Valor: values[index] });
         });
       });
-
-    deletarMoedas();
-    criadorCubinhos(moedaValor);
   }
 });
