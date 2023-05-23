@@ -58,9 +58,8 @@ button.addEventListener('click', (event) => {
     fetch(urlForm(moedaInput.toLowerCase()))
       .then((response) => response.json())
       .then((data) => {
-        Object.keys(data.rates).forEach((elemnt, index) => {
-          const values = Object.values(data.rates);
-          criadorCubinhos({ Moeda: elemnt, Valor: values[index] });
+        Object.entries(data.rates).forEach((elemnt) => {
+          criadorCubinhos({ Moeda: elemnt[0], Valor: elemnt[1] });
         });
       });
   }
