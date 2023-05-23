@@ -5,8 +5,9 @@ import './style.css';
 const button = document.querySelector('#submit');
 const moedaValor = [];
 let listMoedas;
-const urlForm = (moeda) => `https://api.exchangerate.host/latest?base=${moeda}`;
+let reload = 1;
 
+const urlForm = (moeda) => `https://api.exchangerate.host/latest?base=${moeda}`;
 function verificador(element) {
   if (!element) {
     Swal.fire({
@@ -29,7 +30,7 @@ function verificador(element) {
 }
 function criadorCubinhos(arrayMoedas) {
   arrayMoedas.forEach((moedaObj) => {
-    const main = document.querySelector('main');
+    const main1 = document.querySelector('main');
     const section = document.createElement('section');
     const p1 = document.createElement('p');
     const p2 = document.createElement('p');
@@ -43,8 +44,26 @@ function criadorCubinhos(arrayMoedas) {
     section.appendChild(p2);
     section.classList.add('caixa');
 
-    main.appendChild(section);
+    main1.appendChild(section);
   });
+}
+function deletarMoedas() {
+  if (reload > 1) {
+    const main = document.querySelector('main');
+    main.remove();
+
+    const newMain = document.createElement('main');
+    const body = document.querySelector('body');
+
+    body.appendChild(newMain);
+    reload -= 1;
+
+    while (moedaValor.length > 0) {
+      moedaValor.pop();
+    }
+  } else {
+    reload += 1;
+  }
 }
 
 fetch(urlForm('brl'))
@@ -66,6 +85,7 @@ button.addEventListener('click', (event) => {
         });
       });
 
+    deletarMoedas();
     criadorCubinhos(moedaValor);
   }
 });

@@ -7,8 +7,33 @@
     }
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.caixa {
+    display: flex;
+    width: 180px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 12px;
+    border: 2px black solid;
+}
+
+p {
+    margin: 15px;
+}
+
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
