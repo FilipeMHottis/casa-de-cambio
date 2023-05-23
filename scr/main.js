@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Swal from 'sweetalert2';
 import './style.css';
 
@@ -26,6 +27,25 @@ function verificador(element) {
 
   return true;
 }
+function criadorCubinhos(arrayMoedas) {
+  arrayMoedas.forEach((moedaObj) => {
+    const main = document.querySelector('main');
+    const section = document.createElement('section');
+    const p1 = document.createElement('p');
+    const p2 = document.createElement('p');
+    const number = Number(moedaObj.Valor).toFixed(3);
+
+    p1.innerHTML = moedaObj.Moeda;
+    p2.innerHTML = number;
+    p2.classList.add('valor');
+
+    section.appendChild(p1);
+    section.appendChild(p2);
+    section.classList.add('caixa');
+
+    main.appendChild(section);
+  });
+}
 
 fetch(urlForm('brl'))
   .then((response) => response.json())
@@ -33,15 +53,19 @@ fetch(urlForm('brl'))
 
 button.addEventListener('click', (event) => {
   event.preventDefault();
-  const moedaInput = document.querySelector('#moeda').value;
-  verificador(moedaInput);
-});
 
-fetch(urlForm('brl'))
-  .then((response) => response.json())
-  .then((data) => {
-    Object.keys(data.rates).forEach((elemnt, index) => {
-      const values = Object.values(data.rates);
-      moedaValor.push({ Moeda: elemnt, Valor: values[index] });
-    });
-  });
+  const moedaInput = document.querySelector('#moeda').value;
+
+  if (verificador(moedaInput)) {
+    fetch(urlForm(moedaInput.toLowerCase()))
+      .then((response) => response.json())
+      .then((data) => {
+        Object.keys(data.rates).forEach((elemnt, index) => {
+          const values = Object.values(data.rates);
+          moedaValor.push({ Moeda: elemnt, Valor: values[index] });
+        });
+      });
+
+    criadorCubinhos(moedaValor);
+  }
+});
